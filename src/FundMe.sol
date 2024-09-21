@@ -42,7 +42,11 @@ contract FundMe {
     }
 
     function withdraw() public onlyOwner {
-        for (uint256 funderIndex = 0; funderIndex < s_funders.length; funderIndex++) {
+	    //reading from storage is an expensive operation; s_funders.length is a storage variable
+	    // that is being called each iteration of the loop.
+	    // the solution is to map that variable to memory and reading from there instead
+	uint256 fundersLength = s_funders.length;
+        for (uint256 funderIndex = 0; funderIndex < fundersLength; funderIndex++) {
             address funder = s_funders[funderIndex];
             s_addressToAmountFunded[funder] = 0;
         }
